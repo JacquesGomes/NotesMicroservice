@@ -40,7 +40,7 @@ public class NotesRefController {
     @Autowired
     NoteService noteService = null;
 
-    @PostMapping("exercise6/NoteDocReferences")
+    @PostMapping("NoteDocReferences")
     public void storeNoteWithDocumentReferences(@RequestBody NoteDocumentRefBinder noteBinder){
         ArrayList<String> docIds = null;
         NotePlain note = null;
@@ -95,7 +95,7 @@ public class NotesRefController {
 
     }
 
-    @GetMapping("exercise6/NoteDocReferences/{noteId}")
+    @GetMapping("NoteDocReferences/{noteId}")
     public NoteDocumentRefBinder getNoteWithDocumentReferentes(@PathVariable Long noteId){
         NoteDocumentRefBinder noteBinder = null;
         NotePlain note = null;
@@ -135,7 +135,7 @@ public class NotesRefController {
 
     }
 
-    @GetMapping("NotesDocumentos/{noteId}")
+    @GetMapping("NoteDocuments/{noteId}")
     public void GetNoteAndDocuments(@PathVariable Long noteId){
 
         NotePlain note = null;
@@ -164,7 +164,7 @@ public class NotesRefController {
                 docId = noteDocuments[i].getDocId();
                 log.info("Retrieved, doc id: " + docId);
                 try {
-                    docResult = client.getDataFromEndpoint("http://localhost:9000" + "/document/" + docId);
+                    docResult = client.getDataFromEndpoint("http://149.100.142.12" + "/document/" + docId);
                     log.info("Result from the Doc Service: " + docResult);
                 } catch (WebClientResponseException ex) {
                     log.error("HTTP Error: " + ex.getRawStatusCode() + ", Response Body: " + ex.getResponseBodyAsString(), ex);

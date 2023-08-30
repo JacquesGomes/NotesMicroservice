@@ -27,7 +27,7 @@ public class NotesController {
         return new ResponseEntity<String>(rse.getMessage(), rse.getStatusCode());
     }
 
-    @PostMapping("exercise4/note")
+    @PostMapping("note")
     public void storeNote(@RequestBody NotePlain note) {
         log.info("Exercise 4, Post Mapping received, note information: " + note.retrieveNoteInfo());
         try {
@@ -41,7 +41,7 @@ public class NotesController {
         }
     }
 
-    @GetMapping("exercise4/notes")
+    @GetMapping("notes")
     public List<NotePlain> getNotes() {
         List<NotePlain> notes = null;
         try {
@@ -57,7 +57,7 @@ public class NotesController {
         return notes;
     }
 
-    @GetMapping("/exercise4/notes/{header}")
+    @GetMapping("notes/{header}")
     public NotePlain[] getNotesByHeader(@PathVariable String header){
         NotePlain[] notes = null;
         try{
@@ -75,7 +75,7 @@ public class NotesController {
         return notes;
     }
 
-    @GetMapping("/exercise4/notes/{header}/{body}")
+    @GetMapping("notes/{header}/{body}")
     public NotePlain[] getNotesByHeaderAndBody(@PathVariable String header,
                                                @PathVariable String body){
         NotePlain[] notes = null;
