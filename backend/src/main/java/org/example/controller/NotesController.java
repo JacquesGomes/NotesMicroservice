@@ -13,11 +13,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-public class Exercise4Controller {
+public class NotesController {
 
     //simple logging facade
     private static final Logger log =
-            LoggerFactory.getLogger(Exercise4Controller.class);
+            LoggerFactory.getLogger(NotesController.class);
 
     @Autowired
     NoteRepository noteRepository = null;
