@@ -19,7 +19,8 @@ public class MicroClient {
         httpClient.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
         webClientBuilder.clientConnector(new ReactorClientHttpConnector(httpClient));
         webClient =
-                this.webClientBuilder.baseUrl("http://149.100.142.12").build();
+                this.webClientBuilder.baseUrl("http://149.100.142" +
+                        ".12/note-documents").build();
     }
 
     public String getDataFromEndpoint(String endpoint){

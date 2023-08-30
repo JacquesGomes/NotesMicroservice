@@ -29,28 +29,20 @@ public class NotesController {
 
     @PostMapping("note")
     public void storeNote(@RequestBody NotePlain note) {
-        log.info("Exercise 4, Post Mapping received, note information: " + note.retrieveNoteInfo());
         try {
             note = noteRepository.saveAndFlush(note);
-            log.info("Exercise 4, nome information after saving to the db: " + note.retrieveNoteInfo());
 
         } catch (Exception e) {
-            log.error("An error ocurred storing a note " + note.retrieveNoteInfo());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                     e.getMessage());
         }
     }
-
     @GetMapping("notes")
     public List<NotePlain> getNotes() {
         List<NotePlain> notes = null;
         try {
-            log.info("Exercise 4, retrieving all notes from the database");
             notes = noteRepository.findAll();
-            log.info("Exercise 4, retrieved all notes from the database, " +
-                    "count: " + notes.size());
         } catch (Exception e) {
-            log.error("An error ocurred retrieving notes ");
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                     e.getMessage());
         }
@@ -61,14 +53,9 @@ public class NotesController {
     public NotePlain[] getNotesByHeader(@PathVariable String header){
         NotePlain[] notes = null;
         try{
-            log.info("Exercise 4, retrieving notes with header: " + header);
             notes = noteRepository.findNotesByHeader(header);
-            log.info("Exercise 4, retrieved " + notes.length + " notes with " +
-                    "header: " + header);
 
         } catch (Exception e){
-            log.error("Exercise 4, error retrieving the notes from the " +
-                    "database with header: " + header, e);
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                     "Error retrieving the notes with header: " + header);
         }

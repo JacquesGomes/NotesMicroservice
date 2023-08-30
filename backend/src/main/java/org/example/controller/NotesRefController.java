@@ -31,7 +31,6 @@ public class NotesRefController {
         return new ResponseEntity<String>(rse.getMessage(), rse.getStatusCode());
     }
 
-
     @Autowired
     NoteRepository noteRepository = null;
     @Autowired
@@ -53,10 +52,8 @@ public class NotesRefController {
         MicroClient client = null;
         client = new MicroClient();
         client.init();
-
         String TestResult = client.getDataFromEndpoint(urlTeste);
 
-        log.warn("TestResult");
         if(TestResult.equals("false")){
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                     "One of the documents doesnt exists on the database");
@@ -70,31 +67,22 @@ public class NotesRefController {
                 noteRepository.save(note);
             }
 
-            //add a validation to check if the docs exists before storing it
             docIds = noteBinder.getDocIds();
 
-
             for(int i = 0; i < docIds.size(); i++){
-                log.info("Exercise 6, saved note id " + note.getNoteId() + " " +
+                log.info("Saved note id " + note.getNoteId() + " " +
                                 "and doc id: " + docIds.get(i));
                 noteDocRepository.save(new NoteDocument(note.getNoteId(),
                         docIds.get(i)));
             }
-
             noteDocRepository.flush();
 
         } catch (Exception e){
-            log.error("Exercise 6, an error ocurred saving document reference" +
-                    " to a note", e);
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
-                    "Exercise 6, an error ocurred saving document reference" +
+                    "An error ocurred saving document reference" +
                             " to a note " + e.getMessage());
-
         }
-
-
     }
-
     @GetMapping("NoteDocReferences/{noteId}")
     public NoteDocumentRefBinder getNoteWithDocumentReferentes(@PathVariable Long noteId){
         NoteDocumentRefBinder noteBinder = null;
@@ -103,49 +91,33 @@ public class NotesRefController {
         String docId = "";
         try{
             noteBinder = new NoteDocumentRefBinder();
-
             note = noteRepository.findNotePlainByNoteId(noteId);
-
             if(note == null || note.getNoteId().equals("")){
                 throw new NoteException("The note did not exist in the " +
                         "database note id: " + noteId);
             }
-
             noteBinder.setNote(note);
-
             noteDocuments =
                     noteDocRepository.findAllNoteDocumentsBynoteId(noteId);
-
             for(int i = 0 ; i < noteDocuments.length; i++){
                 docId = noteDocuments[i].getDocId();
                 log.info("adding a document reference to the binder, docId: "+ docId);
                 noteBinder.addDocumentReference(noteDocuments[i].getDocId());
-
             }
-
         } catch (Exception e){
-            log.error("An error ocurred retrieving the note and note " +
-                    "references for note id: " + noteId, e);
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "An error ocurred retrieving the note and note " +
                     "references for note id: " + noteId);
-
         }
-
         return noteBinder;
-
     }
 
     @GetMapping("NoteDocuments/{noteId}")
-    public void GetNoteAndDocuments(@PathVariable Long noteId){
-
+    public String GetNoteAndDocuments(@PathVariable Long noteId){
         NotePlain note = null;
         NoteDocument[] noteDocuments = null;
-
         String docId = "";
         MicroClient client = null;
-
         String docResult = "";
-
 
         try{
             note = noteRepository.findNotePlainByNoteId(noteId);
@@ -156,34 +128,26 @@ public class NotesRefController {
 
             client = new MicroClient();
             client.init();
-
             noteDocuments =
                     noteDocRepository.findAllNoteDocumentsBynoteId(noteId);
-
             for(int i = 0; i < noteDocuments.length; i++){
                 docId = noteDocuments[i].getDocId();
-                log.info("Retrieved, doc id: " + docId);
                 try {
-                    docResult = client.getDataFromEndpoint("http://149.100.142.12" + "/document/" + docId);
-                    log.info("Result from the Doc Service: " + docResult);
+                    docResult = client.getDataFromEndpoint("http://149.100.142.12/note-documents" + "/document/" + docId);
+                    return("Result from the Doc Service: " + docResult);
                 } catch (WebClientResponseException ex) {
-                    log.error("HTTP Error: " + ex.getRawStatusCode() + ", Response Body: " + ex.getResponseBodyAsString(), ex);
                     throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                             "HTTP Error: " + ex.getRawStatusCode());
                 } catch (Exception e) {
-                    log.error("Error making GET request", e);
                     throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                             "Error making GET request");
                 }
-
             }
-
         } catch (Exception e){
-            log.error("Error retrieving the note or doc info", e);
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                     "Error retrieving the note or doc info");
-
         }
+        return "error";
     }
 
 
