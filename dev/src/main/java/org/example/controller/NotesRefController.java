@@ -117,7 +117,7 @@ public class NotesRefController {
                     noteDocRepository.findAllNoteDocumentsByNoteId(noteId);
             for(int i = 0 ; i < noteDocuments.length; i++){
                 docId = noteDocuments[i].getDocId();
-                log.info("adding a document reference to the binder, docId: "+ docId);
+                log.info("adding a document reference to the binder, docId: "+ docId + noteBinder);
                 noteBinder.addDocumentReference(docId);
             }
         } catch (Exception e){
